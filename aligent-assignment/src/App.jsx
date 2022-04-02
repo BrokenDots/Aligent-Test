@@ -4,7 +4,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import ResultIndex from './Components/ResultIndexComponent/ResultIndex';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function App() {
 
@@ -24,18 +24,39 @@ function App() {
     })
   }
 
-
-  //this state is used for setting the queries that will be used by the api.
-  //this could be bundled with the changehandler but I did not want to keep making api requests for each change that occured in the form as we can only make limited rquests perday. This is only triggered on a submit event of the form.
-  //setter method used with the submit function on searchbar form
-  //also contains the fetch api along which make the get request
-  //we will later use the data obtained as props for the ResultsIndex component
-  const [requestedDataState, setRequestedData] = useState({});
+  var page = 1;
+  //this sets the terms that will be later sent to the api call on submit
+  const [requestedDataState, setRequestedData] = useState([]);
 
   function submitHandler(e){
     e.preventDefault(); 
     console.log(searchFormState);
-    setRequestedData(searchFormState);
+    page = 1;
+    callApi(searchFormState.searchField, page)
+  }
+
+  
+
+  useEffect(() => {
+      const myDiv = document.getElementById('resultList')  
+      myDiv.addEventListener('scroll', () => {  
+        if (myDiv.offsetHeight + myDiv.scrollTop >= myDiv.scrollHeight) {  
+            console.log('scrolled to bottom')
+            callApi(searchFormState.searchField, page)
+        }  
+      })
+  });
+
+  function callApi(searchTerm, page) {
+    fetch(`http://www.omdbapi.com/?apikey=6187632f&s=${searchFormState.searchField}&page=${page}`)
+    .then(response => {
+        console.log(response);
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+        setRequestedData(prev => [...prev, ...data.Search]);
+    })
   }
 
 
@@ -71,7 +92,7 @@ function App() {
 
 
 
-        <ResultIndex searchTerm={requestedDataState}/>
+        <ResultIndex responseData={requestedDataState}/>
 
        
     </div>
