@@ -4,7 +4,7 @@ import './ResultIndex.css';
 
 function ResultIndex(props) {
   return (
-    <h1>Result index {props.searchTerm}</h1>
+    <h1>Result index {props.searchTerm.searchField}</h1>
   );
 }
 
