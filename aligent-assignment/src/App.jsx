@@ -4,15 +4,27 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import ResultIndex from './Components/ResultIndexComponent/ResultIndex';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 
 
 function App() {
 
   //this state is for handing the change in the searchbar form
-  //setter used in the changeHandler function
+  //this state would hold whatever information is currently in the navbar form
+  //use with changeHandler func
   const [searchFormState, setSearchFormState ] = useState({});
 
+  //this sets the terms that will be later sent to the api call on submit
+  //used with submitHandler() function
+  const [requestedDataState, setRequestedData] = useState([]);
+
+  //this state is to control whether or not the load more button is displayed
+  // used with submitHandler() and callApi()
+  const [loadMoreBtnState, setLoadMoreBtnState] = useState(false)
+
+
+  //params : event
+  //updates searchFromState with the form infomation
   function changeHandler(e){
     e.preventDefault();
     let name = e.target.name;
@@ -26,44 +38,30 @@ function App() {
   }
 
   
-  //this sets the terms that will be later sent to the api call on submit
-  const [requestedDataState, setRequestedData] = useState([]);
-
+  //this is used to keep track of which page to call next with the api. useRef used because we need to preserve value with each rerender.
   const page = useRef(1);
+
+  //@params : event
   //triggers when form is submitted, calls the api with the form data
+  //updates requestedData state to be empty array and calls api with the form info.
   function submitHandler(e){
-    e.preventDefault(); 
+    e.preventDefault(); //prevent page from reloading which is standard html behavior
     console.log(searchFormState);
-    // page = 1;
     setRequestedData([]);   //reset the state of the result list to zero so that old results arent displayed (this is important becaue the callApi function appends to the existing list)
     callApi(searchFormState.searchField, page)
   }
 
-  
-
-  //to trigger the scroll end effect
-  // useEffect(() => {
-  //     const myDiv = document.getElementById('resultList') 
-  //     myDiv.addEventListener('scroll', () => {  
-  //       if (myDiv.offsetHeight + myDiv.scrollTop >= myDiv.scrollHeight) {  
-  //           page++;
-  //           console.log('page = ' + page)
-  //           callApi(searchFormState.searchField, page)
-  //       }  
-  //     })
-  // });
-
-
+  //@params : none
+  //updates the page variable so that the api can call the next page
+  //loads more results using the api
   function loadMore(){
     page.current = page.current + 1
     callApi(searchFormState.searchField, page.current)
   }
 
-  
-
-
-
-  //send get request to api and update the state
+  //@params : searchTerm(string), page{int}
+  //send get request to api and update the state RequestedData
+  //requestedData is used as a prop for the ResultIndex component so it triggers a rerender of it
   function callApi(searchTerm, page) {
     fetch(`http://www.omdbapi.com/?apikey=6187632f&s=${searchFormState.searchField}&page=${page}`)
     .then(response => {
@@ -73,9 +71,12 @@ function App() {
     .then(data => {
         console.log("data response is");
         console.log(data.Response);
-        if(data.Response == "True")
+        if(data.Response === "True"){
           setRequestedData(prev => [...prev, ...data.Search]);
-        
+          setLoadMoreBtnState(true);
+        }
+        else
+          setLoadMoreBtnState(false);
     })
   }
 
@@ -113,7 +114,7 @@ function App() {
 
 
         <ResultIndex responseData={requestedDataState}/>
-        <button onClick={loadMore}>more</button>
+        {loadMoreBtnState?<button onClick={loadMore}>more</button>:""}
 
        
     </div>
