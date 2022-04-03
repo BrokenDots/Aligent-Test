@@ -4,7 +4,8 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import ResultIndex from './Components/ResultIndexComponent/ResultIndex';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+
 
 function App() {
 
@@ -24,29 +25,45 @@ function App() {
     })
   }
 
-  var page = 1;
+  
   //this sets the terms that will be later sent to the api call on submit
   const [requestedDataState, setRequestedData] = useState([]);
 
+  const page = useRef(1);
+  //triggers when form is submitted, calls the api with the form data
   function submitHandler(e){
     e.preventDefault(); 
     console.log(searchFormState);
-    page = 1;
+    // page = 1;
+    setRequestedData([]);   //reset the state of the result list to zero so that old results arent displayed (this is important becaue the callApi function appends to the existing list)
     callApi(searchFormState.searchField, page)
   }
 
   
 
-  useEffect(() => {
-      const myDiv = document.getElementById('resultList')  
-      myDiv.addEventListener('scroll', () => {  
-        if (myDiv.offsetHeight + myDiv.scrollTop >= myDiv.scrollHeight) {  
-            console.log('scrolled to bottom')
-            callApi(searchFormState.searchField, page)
-        }  
-      })
-  });
+  //to trigger the scroll end effect
+  // useEffect(() => {
+  //     const myDiv = document.getElementById('resultList') 
+  //     myDiv.addEventListener('scroll', () => {  
+  //       if (myDiv.offsetHeight + myDiv.scrollTop >= myDiv.scrollHeight) {  
+  //           page++;
+  //           console.log('page = ' + page)
+  //           callApi(searchFormState.searchField, page)
+  //       }  
+  //     })
+  // });
 
+
+  function loadMore(){
+    page.current = page.current + 1
+    callApi(searchFormState.searchField, page.current)
+  }
+
+  
+
+
+
+  //send get request to api and update the state
   function callApi(searchTerm, page) {
     fetch(`http://www.omdbapi.com/?apikey=6187632f&s=${searchFormState.searchField}&page=${page}`)
     .then(response => {
@@ -54,8 +71,11 @@ function App() {
         return response.json();
     })
     .then(data => {
-        console.log(data);
-        setRequestedData(prev => [...prev, ...data.Search]);
+        console.log("data response is");
+        console.log(data.Response);
+        if(data.Response == "True")
+          setRequestedData(prev => [...prev, ...data.Search]);
+        
     })
   }
 
@@ -93,6 +113,7 @@ function App() {
 
 
         <ResultIndex responseData={requestedDataState}/>
+        <button onClick={loadMore}>more</button>
 
        
     </div>

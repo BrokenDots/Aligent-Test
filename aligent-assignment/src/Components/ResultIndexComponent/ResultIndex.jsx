@@ -7,7 +7,7 @@ function ResultIndex(props) {
     console.log(movieArray);
     return (
         <div id="resultList">
-            {movieArray ? movieArray.map(ele=>(<h2>{ele.Title}</h2>)): ""}
+            {movieArray ? movieArray.map(ele=>(<h2 key={ele.imdbID}>{ele.Title}</h2>)): ""}
         </div>
         
     );
