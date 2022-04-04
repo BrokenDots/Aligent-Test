@@ -1,6 +1,7 @@
 :root {
   --primaryColor: #fff;
-  --accentColor: grey;
+  --accentColor: #272A35;
+  --outlineColor : #dfdfdf;
   --maxWidth : 1300px;
 
   /* responsive font sizes */
@@ -14,6 +15,9 @@
   --step-5: clamp(3.27rem, calc(2.75rem + 2.56vw), 4.58rem);
 }
 
+body{
+  background-color: var(--primaryColor);
+}
 
 .searchbar-wrapper{
   background-color: var(--accentColor);
@@ -55,6 +59,25 @@
 }
 
 
+.result-canvas{
+    max-width: var(--maxWidth);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.8fr;
+    gap : 2rem;
+}
+
+.result-count-info{
+  font-weight: 600;
+  font-size: var(--step-1);
+  padding: 2rem 2rem;
+}
+
+.result-fullinfo-div{
+  
+}
+
+
 @media only screen and (max-width: 600px) {
   .searchbar {
     display: flex;
@@ -62,3 +85,88 @@
     gap : 1.2em;
   }
 }
+
+
+/* move this part to its own component later */
+.result-fullinfo-div{
+  
+}
+
+.movie-hero{
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap : 2rem;
+  padding: 2rem 0;
+  border-bottom: solid var(--outlineColor) ;
+}
+
+.movie-hero .hero-text{
+  align-self: flex-end;
+}
+
+.movie-hero .title{
+  font-size: var(--step-3);
+  font-weight: 600;
+  margin-bottom: 0.5em;
+}
+
+.movie-hero .poster{
+  width: 100%;
+  aspect-ratio: 3/5;
+}
+
+.hero-text .additional-info{
+  display: flex;
+  font-size: var(--step--1);
+  gap: 0.5em;
+  margin-bottom: 0.5em;
+  align-items: center;
+}
+
+.rated{
+  border: solid black 1px;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.actors{
+  font-size: var(--step--1);
+}
+
+.synopsis{
+  padding: 2rem 0;
+  font-size: var(--step--1);
+  border-bottom: solid var(--outlineColor) ;
+  line-height: 1.5;
+}
+
+.ratings{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1em;
+  margin-top: 2em;
+}
+
+.rating-block, .rating-block-mid{
+  padding : 2em 0;
+  align-items: center;
+  justify-self: center;
+}
+
+.rating-block-mid{
+  width: 100%;
+  border-left: solid var(--outlineColor);
+  border-right: solid var(--outlineColor);;
+}
+
+.rating{
+  text-align: center;
+  font-size: var(--step-0);
+  margin-bottom: 0.5em;
+}
+
+.rating-name{
+  font-size: var(--step--1);
+  text-align: center;
+}
+

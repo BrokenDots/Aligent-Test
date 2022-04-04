@@ -22,6 +22,9 @@ function App() {
   // used with submitHandler() and callApi()
   const [loadMoreBtnState, setLoadMoreBtnState] = useState(false)
 
+  //state to hold the result count
+  const [resultCountState, setResultCountState] = useState()
+
 
   //params : event
   //updates searchFromState with the form infomation
@@ -48,6 +51,7 @@ function App() {
     e.preventDefault(); //prevent page from reloading which is standard html behavior
     console.log(searchFormState);
     setRequestedData([]);   //reset the state of the result list to zero so that old results arent displayed (this is important becaue the callApi function appends to the existing list)
+    
     callApi(searchFormState.searchField, page)
   }
 
@@ -70,7 +74,9 @@ function App() {
     })
     .then(data => {
         console.log("data response is");
+        console.log(data);
         console.log(data.Response);
+        setResultCountState(data.totalResults);
         if(data.Response === "True"){
           setRequestedData(prev => [...prev, ...data.Search]);
           setLoadMoreBtnState(true);
@@ -105,16 +111,55 @@ function App() {
                 <label htmlFor="episodes">Episodes</label>
               </div>
 
-              <button type='submit'>Search</button>
           </form>
 
         </div>
 
 
 
+        <div className="result-canvas">
 
-        <ResultIndex responseData={requestedDataState}/>
-        {loadMoreBtnState?<button onClick={loadMore}>more</button>:""}
+            <div className="result-list-div">
+                <div className="result-count-info">{resultCountState} RESULTS</div>
+                <ResultIndex responseData={requestedDataState}/>
+                {loadMoreBtnState?<button onClick={loadMore}>more</button>:""}
+            </div>
+
+            <div className="result-fullinfo-div">
+
+                <div className="movie-hero">
+                    <img className="poster" src="https://m.media-amazon.com/images/M/MV5BNzVlY2MwMjktM2E4OS00Y2Y3LWE3ZjctYzhkZGM3YzA1ZWM2XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg" alt="" />
+                    <div className="hero-text">
+                        <div className="title">Star Wars - the empire strkies back</div>
+                        <div className="additional-info">
+                            <div className="rated">PG</div>
+                            <div className="year">1990</div>
+                            <div className="tags">Action, Adventure, Fantasy</div>
+                            <div className="time">24mins</div>
+                        </div>
+                        <div className="actors">Mark Hamill, Harrison Ford, Carrie Fisher</div>
+                    </div>
+                </div>
+
+                <div className="synopsis">Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee and two droids to save the galaxy from the Empire's world-destroying battle station, while also attempting to rescue Princess Leia from the mysterious Darth Vad</div>
+
+                <div className="ratings">
+                    <div className="rating-block">
+                      <div className="rating">8.7/10</div>
+                      <div className="rating-name">Rotten Tomatoes</div>
+                    </div>
+                    <div className="rating-block-mid">
+                      <div className="rating">8.7/10</div>
+                      <div className="rating-name">Rotten Tomatoes</div>
+                    </div>
+                    <div className="rating-block">
+                      <div className="rating">8.7/10</div>
+                      <div className="rating-name">Rotten Tomatoes</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
 
        
     </div>

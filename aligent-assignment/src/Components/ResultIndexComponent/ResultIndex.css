@@ -3,6 +3,35 @@ h1{
 }
 
 #resultList{
-    height : 40vh;
+    height : 70vh;
     overflow-y: auto;
+}
+
+.result-list-item{
+    
+    display : grid;
+    grid-template-columns: 1fr 3fr;
+    gap : 2em;
+    padding: 1em 2em;
+    background-color: var(--primaryColor);
+    border-bottom: solid var(--outlineColor);
+    /* border-left: solid #bdbdbd;
+    border-right: solid #bdbdbd; */
+}
+
+.movie-poster{
+    object-fit: cover;
+    width : 100%;
+    aspect-ratio: 1/1;
+}
+
+.result-list-item .title{
+    font-size: var(--step-0);
+    font-weight: 600;
+}
+
+.result-list-item .year{
+    margin-top: 1em;
+    font-size: var(--step--1);
+    font-weight: 400;
 }

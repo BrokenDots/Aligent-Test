@@ -4,10 +4,22 @@ import './ResultIndex.css';
 
 function ResultIndex(props) {
     let movieArray = props.responseData;
-    console.log(movieArray);
+    // console.log(movieArray);
     return (
         <div id="resultList">
-            {movieArray ? movieArray.map(ele=>(<h2 key={ele.imdbID}>{ele.Title}</h2>)): ""}
+            
+            {movieArray.map((element)=>{
+                return(
+                    <div className="result-list-item" key={element.imdbID}>
+                        <img className="movie-poster" src={element.Poster} alt="" />
+                        <div className="movie-info">
+                            <div className="title">{element.Title}</div>
+                            <div className="year">{element.Year}</div>
+                        </div>
+                        
+                    </div>
+                )
+            })}
         </div>
         
     );
